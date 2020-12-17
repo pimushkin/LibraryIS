@@ -14,6 +14,6 @@ namespace LibraryIS.Core.Entities
         public bool IsApproved { get; set; }
         public DateTime CreationDate { get; set; }
         public bool IsAdmin { get; set; }
-        public ReaderProfile ReaderProfile { get; set; }
+        public ReaderProfile? ReaderProfile { get; set; }
     }
 }

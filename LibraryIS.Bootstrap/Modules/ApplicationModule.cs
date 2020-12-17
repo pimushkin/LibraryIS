@@ -1,4 +1,6 @@
 ﻿using LibraryIS.Application.Behaviors;
+using LibraryIS.Application.Interfaces;
+using LibraryIS.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,7 @@ namespace LibraryIS.Bootstrap.Modules
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
     }
 }

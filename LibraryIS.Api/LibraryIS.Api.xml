@@ -4,5 +4,19 @@
         <name>LibraryIS.Api</name>
     </assembly>
     <members>
+        <member name="M:LibraryIS.Api.Controllers.AccountController.Token(LibraryIS.Application.DTOs.LoginDto)">
+            <summary>
+            Get a JWT token to access endpoints that require authorization.
+            </summary>
+            <param name="loginRequestDto">Credentials for authentication.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LibraryIS.Api.Controllers.AccountController.Register(LibraryIS.Application.DTOs.RegisterDto)">
+            <summary>
+            Registration of a new reader on the site.
+            </summary>
+            <param name="registerRequestDto">Credentials required for registration.</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

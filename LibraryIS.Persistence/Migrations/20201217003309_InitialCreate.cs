@@ -12,7 +12,7 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,8 +24,8 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LibraryCard = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PassportSeriesAndNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LibraryCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PassportSeriesAndNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BornYear = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -38,12 +38,12 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublicationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PageCount = table.Column<int>(type: "int", nullable: false),
                     LanguageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Rating = table.Column<double>(type: "float", nullable: false)
+                    Rating = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,10 +61,10 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
@@ -86,7 +86,7 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -107,7 +107,7 @@ namespace LibraryIS.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RequestStatus = table.Column<int>(type: "int", nullable: false),
-                    PagesRange = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PagesRange = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReaderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -134,7 +134,7 @@ namespace LibraryIS.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Rating = table.Column<double>(type: "float", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,7 +150,7 @@ namespace LibraryIS.Persistence.Migrations
                         column: x => x.ProfileId,
                         principalTable: "ReaderProfile",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,7 +158,7 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReaderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -184,7 +184,7 @@ namespace LibraryIS.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -231,7 +231,7 @@ namespace LibraryIS.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReceiveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReaderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
