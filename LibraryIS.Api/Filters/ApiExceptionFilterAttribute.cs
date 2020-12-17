@@ -7,14 +7,16 @@ using LibraryIS.CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace LibraryIS.CrossCutting.Filters
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+        private readonly ILogger _logger;
 
-        public ApiExceptionFilterAttribute()
+        public ApiExceptionFilterAttribute(ILogger logger)
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
@@ -23,10 +25,13 @@ namespace LibraryIS.CrossCutting.Filters
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
+            _logger = logger;
         }
 
         public override void OnException(ExceptionContext context)
         {
+            _logger.Error(context.Exception, "Unhandled exception");
+
             HandleException(context);
 
             base.OnException(context);

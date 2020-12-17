@@ -6,17 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIS.Persistence
 {
-    public sealed class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            Database.Migrate();
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>();
             modelBuilder.Entity<Book>();
-            modelBuilder.Entity<CopyRequest>();
+            modelBuilder.Entity<CopyBook>();
+            modelBuilder.Entity<ElectronicCopyRequest>();
             modelBuilder.Entity<Evaluation>();
             modelBuilder.Entity<Genre>();
             modelBuilder.Entity<Language>();

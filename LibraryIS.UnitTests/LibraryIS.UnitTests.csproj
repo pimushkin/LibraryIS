@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryIS.Api\LibraryIS.Api.csproj" />
+    <ProjectReference Include="..\LibraryIS.Application\LibraryIS.Application.csproj" />
+    <ProjectReference Include="..\LibraryIS.Bootstrap\LibraryIS.Bootstrap.csproj" />
+    <ProjectReference Include="..\LibraryIS.Core\LibraryIS.Core.csproj" />
+    <ProjectReference Include="..\LibraryIS.CrossCutting\LibraryIS.CrossCutting.csproj" />
+    <ProjectReference Include="..\LibraryIS.Infrastructure\LibraryIS.Infrastructure.csproj" />
+    <ProjectReference Include="..\LibraryIS.Persistence\LibraryIS.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

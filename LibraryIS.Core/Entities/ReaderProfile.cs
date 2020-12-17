@@ -12,7 +12,7 @@ namespace LibraryIS.Core.Entities
         public DateTime BornYear { get; set; }
         public List<TakenBook>? TakenBooks { get; set; }
         public List<ReservedBook>? ReservedBooks { get; set; }
-        public List<CopyRequest>? CopyRequests { get; set; }
+        public List<ElectronicCopyRequest>? ElectronicCopyRequests { get; set; }
         public List<Genre>? TopGenres { get; set; }
         public List<Evaluation>? Evaluations { get; set; }
     }

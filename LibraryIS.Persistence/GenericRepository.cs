@@ -33,7 +33,7 @@ namespace LibraryIS.Persistence
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public TEntity Find(Expression<Func<TEntity, bool>> match)
+        public TEntity? Find(Expression<Func<TEntity, bool>> match)
         {
             return _context.Set<TEntity>().SingleOrDefault(match);
         }
@@ -53,7 +53,7 @@ namespace LibraryIS.Persistence
             return await _context.Set<TEntity>().Where(match).ToListAsync();
         }
 
-        public IEnumerable<TEntity> Filter(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int? page = null,
+        public IEnumerable<TEntity> Filter(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "", int? page = null,
             int? pageSize = null)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();

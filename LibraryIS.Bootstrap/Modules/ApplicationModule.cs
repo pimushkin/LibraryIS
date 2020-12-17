@@ -15,6 +15,7 @@ namespace LibraryIS.Bootstrap.Modules
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IBooksCatalogService, BooksCatalogService>();
         }
     }
 }

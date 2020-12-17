@@ -12,7 +12,7 @@ namespace LibraryIS.Core.Interfaces
         IQueryable<TEntity> Query();
         TEntity GetByUniqueId(string id);
         Task<TEntity> GetByUniqueIdAsync(string id);
-        TEntity Find(Expression<Func<TEntity, bool>> match);
+        TEntity? Find(Expression<Func<TEntity, bool>> match);
         Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> match);
         ICollection<TEntity> FindAll(Expression<Func<TEntity, bool>> match);
         Task<ICollection<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match);

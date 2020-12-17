@@ -8,6 +8,30 @@ namespace LibraryIS.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Author",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Author", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genre",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genre", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Language",
                 columns: table => new
                 {
@@ -17,6 +41,18 @@ namespace LibraryIS.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Language", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PublishingHouse",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PublishingHouse", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,6 +93,30 @@ namespace LibraryIS.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GenreReaderProfile",
+                columns: table => new
+                {
+                    ReaderProfilesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TopGenresId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GenreReaderProfile", x => new { x.ReaderProfilesId, x.TopGenresId });
+                    table.ForeignKey(
+                        name: "FK_GenreReaderProfile_Genre_TopGenresId",
+                        column: x => x.TopGenresId,
+                        principalTable: "Genre",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GenreReaderProfile_ReaderProfile_ReaderProfilesId",
+                        column: x => x.ReaderProfilesId,
+                        principalTable: "ReaderProfile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -82,22 +142,75 @@ namespace LibraryIS.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Author",
+                name: "AuthorBook",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AuthorsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BooksId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Author", x => x.Id);
+                    table.PrimaryKey("PK_AuthorBook", x => new { x.AuthorsId, x.BooksId });
                     table.ForeignKey(
-                        name: "FK_Author_Book_BookId",
-                        column: x => x.BookId,
+                        name: "FK_AuthorBook_Author_AuthorsId",
+                        column: x => x.AuthorsId,
+                        principalTable: "Author",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AuthorBook_Book_BooksId",
+                        column: x => x.BooksId,
                         principalTable: "Book",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookGenre",
+                columns: table => new
+                {
+                    BooksId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GenresId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookGenre", x => new { x.BooksId, x.GenresId });
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Book_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Genre_GenresId",
+                        column: x => x.GenresId,
+                        principalTable: "Genre",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookPublishingHouse",
+                columns: table => new
+                {
+                    BooksId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PublishingHousesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookPublishingHouse", x => new { x.BooksId, x.PublishingHousesId });
+                    table.ForeignKey(
+                        name: "FK_BookPublishingHouse_Book_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookPublishingHouse_PublishingHouse_PublishingHousesId",
+                        column: x => x.PublishingHousesId,
+                        principalTable: "PublishingHouse",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,51 +264,6 @@ namespace LibraryIS.Persistence.Migrations
                         principalTable: "ReaderProfile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Genre",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ReaderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Genre_Book_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Book",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Genre_ReaderProfile_ReaderProfileId",
-                        column: x => x.ReaderProfileId,
-                        principalTable: "ReaderProfile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PublishingHouse",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PublishingHouse", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PublishingHouse_Book_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Book",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -253,14 +321,24 @@ namespace LibraryIS.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Author_BookId",
-                table: "Author",
-                column: "BookId");
+                name: "IX_AuthorBook_BooksId",
+                table: "AuthorBook",
+                column: "BooksId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_LanguageId",
                 table: "Book",
                 column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookGenre_GenresId",
+                table: "BookGenre",
+                column: "GenresId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookPublishingHouse_PublishingHousesId",
+                table: "BookPublishingHouse",
+                column: "PublishingHousesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CopyRequest_BookId",
@@ -283,19 +361,9 @@ namespace LibraryIS.Persistence.Migrations
                 column: "ProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genre_BookId",
-                table: "Genre",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Genre_ReaderProfileId",
-                table: "Genre",
-                column: "ReaderProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PublishingHouse_BookId",
-                table: "PublishingHouse",
-                column: "BookId");
+                name: "IX_GenreReaderProfile_TopGenresId",
+                table: "GenreReaderProfile",
+                column: "TopGenresId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReservedBook_BookId",
@@ -326,7 +394,13 @@ namespace LibraryIS.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Author");
+                name: "AuthorBook");
+
+            migrationBuilder.DropTable(
+                name: "BookGenre");
+
+            migrationBuilder.DropTable(
+                name: "BookPublishingHouse");
 
             migrationBuilder.DropTable(
                 name: "CopyRequest");
@@ -335,10 +409,7 @@ namespace LibraryIS.Persistence.Migrations
                 name: "Evaluation");
 
             migrationBuilder.DropTable(
-                name: "Genre");
-
-            migrationBuilder.DropTable(
-                name: "PublishingHouse");
+                name: "GenreReaderProfile");
 
             migrationBuilder.DropTable(
                 name: "ReservedBook");
@@ -348,6 +419,15 @@ namespace LibraryIS.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Author");
+
+            migrationBuilder.DropTable(
+                name: "PublishingHouse");
+
+            migrationBuilder.DropTable(
+                name: "Genre");
 
             migrationBuilder.DropTable(
                 name: "Book");
