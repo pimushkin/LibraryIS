@@ -11,6 +11,7 @@ namespace LibraryIS.Application.DTOs
 {
     public class BookPreviewDto : IMapFrom<Book>
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public List<string> Authors { get; set; }
         public DateTime PublicationDate { get; set; }
@@ -21,7 +22,7 @@ namespace LibraryIS.Application.DTOs
 
         public void Mapping(Profile profile)
         {
-                profile.CreateMap<Book, BookPreviewDto>()
+            profile.CreateMap<Book, BookPreviewDto>()
                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(x => x.Name)))
                 .ForMember(dest => dest.PublishingHouses, opt => opt.MapFrom(src => src.PublishingHouses.Select(x => x.Name)))
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(x => x.Name)));

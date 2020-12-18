@@ -14,6 +14,5 @@ namespace LibraryIS.Core.Entities
         public List<PublishingHouse> PublishingHouses { get; set; }
         public List<Genre> Genres { get; set; }
         public Language Language { get; set; }
-        public double? Rating { get; set; }
     }
 }
