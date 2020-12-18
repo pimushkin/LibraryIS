@@ -4,14 +4,16 @@ using LibraryIS.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibraryIS.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201218062547_AddUserToProfile")]
+    partial class AddUserToProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,14 +135,9 @@ namespace LibraryIS.Persistence.Migrations
                     b.Property<Guid?>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReaderProfileId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("ReaderProfileId");
 
                     b.ToTable("CopyBook");
                 });
@@ -158,7 +155,7 @@ namespace LibraryIS.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ReaderProfileId")
+                    b.Property<Guid?>("ReaderProfileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("RequestStatus")
@@ -275,7 +272,7 @@ namespace LibraryIS.Persistence.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ReaderProfileId")
+                    b.Property<Guid?>("ReaderProfileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
@@ -299,7 +296,7 @@ namespace LibraryIS.Persistence.Migrations
                     b.Property<Guid?>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ReaderProfileId")
+                    b.Property<Guid?>("ReaderProfileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ReceiveDate")
@@ -428,13 +425,7 @@ namespace LibraryIS.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
-                        .WithMany()
-                        .HasForeignKey("ReaderProfileId");
-
                     b.Navigation("Book");
-
-                    b.Navigation("ReaderProfile");
                 });
 
             modelBuilder.Entity("LibraryIS.Core.Entities.ElectronicCopyRequest", b =>
@@ -443,15 +434,11 @@ namespace LibraryIS.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", null)
                         .WithMany("ElectronicCopyRequests")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReaderProfileId");
 
                     b.Navigation("Book");
-
-                    b.Navigation("ReaderProfile");
                 });
 
             modelBuilder.Entity("LibraryIS.Core.Entities.Evaluation", b =>
@@ -488,15 +475,11 @@ namespace LibraryIS.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", null)
                         .WithMany("ReservedBooks")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReaderProfileId");
 
                     b.Navigation("Book");
-
-                    b.Navigation("ReaderProfile");
                 });
 
             modelBuilder.Entity("LibraryIS.Core.Entities.TakenBook", b =>
@@ -505,15 +488,11 @@ namespace LibraryIS.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", null)
                         .WithMany("TakenBooks")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReaderProfileId");
 
                     b.Navigation("Book");
-
-                    b.Navigation("ReaderProfile");
                 });
 
             modelBuilder.Entity("LibraryIS.Core.Entities.ReaderProfile", b =>

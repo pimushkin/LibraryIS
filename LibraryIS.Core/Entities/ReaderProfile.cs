@@ -7,6 +7,7 @@ namespace LibraryIS.Core.Entities
 {
     public class ReaderProfile : BaseEntity<Guid>
     {
+        public User User { get; set; }
         public string LibraryCard { get; set; }
         public string PassportSeriesAndNumber { get; set; }
         public DateTime BornYear { get; set; }

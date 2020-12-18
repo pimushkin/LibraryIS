@@ -25,7 +25,11 @@ namespace LibraryIS.Persistence
             modelBuilder.Entity<ReaderProfile>();
             modelBuilder.Entity<ReservedBook>();
             modelBuilder.Entity<TakenBook>();
-            modelBuilder.Entity<User>();
+            modelBuilder
+                .Entity<User>()
+                .HasOne(u => u.ReaderProfile)
+                .WithOne(p => p.User)
+                .HasForeignKey<ReaderProfile>(p => p.Id);
             base.OnModelCreating(modelBuilder);
         }
     }

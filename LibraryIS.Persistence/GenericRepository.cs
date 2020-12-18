@@ -23,12 +23,12 @@ namespace LibraryIS.Persistence
             return _context.Set<TEntity>().AsQueryable();
         }
 
-        public TEntity GetByUniqueId(string id)
+        public TEntity GetByUniqueId(object id)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public async Task<TEntity> GetByUniqueIdAsync(string id)
+        public async Task<TEntity> GetByUniqueIdAsync(object id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }

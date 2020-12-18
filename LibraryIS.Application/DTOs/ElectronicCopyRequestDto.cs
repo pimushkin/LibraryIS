@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LibraryIS.Application.DTOs
 {
-    public class EvaluationDto
+    public class ElectronicCopyRequestDto
     {
-        public double Rating { get; set; }
         public Guid BookId { get; set; }
+        public string PagesRange { get; set; }
     }
 }

@@ -10,8 +10,8 @@ namespace LibraryIS.Core.Interfaces
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity<Guid>
     {
         IQueryable<TEntity> Query();
-        TEntity GetByUniqueId(string id);
-        Task<TEntity> GetByUniqueIdAsync(string id);
+        TEntity GetByUniqueId(object id);
+        Task<TEntity> GetByUniqueIdAsync(object id);
         TEntity? Find(Expression<Func<TEntity, bool>> match);
         Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> match);
         ICollection<TEntity> FindAll(Expression<Func<TEntity, bool>> match);
