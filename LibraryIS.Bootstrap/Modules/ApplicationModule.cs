@@ -18,6 +18,8 @@ namespace LibraryIS.Bootstrap.Modules
             services.AddScoped<IBooksCatalogService, BooksCatalogService>();
             services.AddScoped<IEvaluationService, EvaluationService>();
             services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IAdministrationService, AdministrationService>();
+            services.AddScoped<IProfileService, ProfileService>();
         }
     }
 }
