@@ -23,7 +23,7 @@ namespace LibraryIS.Persistence
             if (_repositories.Keys.Contains(typeof(TEntity)))
             {
                 {
-                    return _repositories[typeof(TEntity)] as IGenericRepository<TEntity>;
+                    return (IGenericRepository<TEntity>)_repositories[typeof(TEntity)];
                 }
             }
 

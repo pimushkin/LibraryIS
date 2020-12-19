@@ -8,6 +8,6 @@ namespace LibraryIS.Application.Interfaces
 {
     public interface IEvaluationService
     {
-        public Dictionary<Guid, double> GetBooksRatings();
+        public Task<Dictionary<Guid, double>> GetBooksRatingsAsync();
     }
 }

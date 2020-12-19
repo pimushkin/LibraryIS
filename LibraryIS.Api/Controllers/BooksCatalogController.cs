@@ -22,9 +22,9 @@ namespace LibraryIS.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/top-books")]
-        public ActionResult<IEnumerable<BookPreviewDto>> GetTopBooks()
+        public async Task<ActionResult<IEnumerable<BookPreviewDto>>> GetTopBooks()
         {
-            return Ok(_booksCatalogService.GetTopBooks());
+            return Ok(await _booksCatalogService.GetTopBooksAsync());
         }
 
         /// <summary>
@@ -34,9 +34,9 @@ namespace LibraryIS.Api.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("/recent-books")]
-        public ActionResult<IEnumerable<BookPreviewDto>> GetRecentBooks(int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<BookPreviewDto>>> GetRecentBooks(int page, int pageSize)
         {
-            return Ok(_booksCatalogService.GetRecentBooks(page, pageSize));
+            return Ok(await _booksCatalogService.GetRecentBooksAsync(page, pageSize));
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace LibraryIS.Api.Controllers
         /// <param name="bookTitle"></param>
         /// <returns></returns>
         [HttpPost("/search-by-title")]
-        public ActionResult GetBooksByTitle([FromBody] BookTitleDto bookTitle)
+        public async Task<ActionResult<IEnumerable<BookPreviewDto>>> GetBooksByTitle([FromBody] BookTitleDto bookTitle)
         {
-            return Ok(_booksCatalogService.SearchByTitle(bookTitle.Title));
+            return Ok(await _booksCatalogService.SearchByTitleAsync(bookTitle.Title));
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace LibraryIS.Api.Controllers
         /// <param name="bookSearchFilter"></param>
         /// <returns></returns>
         [HttpPost("/search-by-filter")]
-        public ActionResult GetBooksByFilter([FromBody] BookSearchFilterDto bookSearchFilter)
+        public async Task<ActionResult<IEnumerable<BookPreviewDto>>> GetBooksByFilter([FromBody] BookSearchFilterDto bookSearchFilter)
         {
-            return Ok(_booksCatalogService.SearchByFilter(bookSearchFilter));
+            return Ok(await _booksCatalogService.SearchByFilterAsync(bookSearchFilter));
         }
     }
 }

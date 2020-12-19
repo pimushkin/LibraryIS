@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using LibraryIS.Application.DTOs;
@@ -27,64 +28,70 @@ namespace LibraryIS.Application.Services
             _evaluationService = evaluationService;
         }
 
-        public IEnumerable<BookPreviewDto> GetRecentBooks(int page, int pageSize)
+        public async Task<IEnumerable<BookPreviewDto>> GetRecentBooksAsync(int page, int pageSize)
         {
-            var books = _unitOfWork.GetRepository<Book>().Query().Skip((page - 1) * pageSize).Take(pageSize)
-                .ProjectTo<BookPreviewDto>(_mapper.ConfigurationProvider).ToList();
-            if (books == null || books.Count == 0)
+            var books = await _unitOfWork.GetRepository<Book>().FilterAsync(includeProperties: "Authors,PublishingHouses,Genres", page: page, pageSize: pageSize);
+            var booksList = books.ToList();
+            var booksPreviews = _mapper.Map<List<Book>, List<BookPreviewDto>>(booksList);
+            if (booksPreviews == null || booksPreviews.Count == 0)
             {
-                throw new NotFoundException("No books were found for the specified page.");
+                const string message = "No books were found for the specified page.";
+                _logger.Error(message);
+                throw new NotFoundException(message);
             }
-            var orderRatings = _evaluationService.GetBooksRatings();
+            var orderRatings = await _evaluationService.GetBooksRatingsAsync();
             foreach (var (bookId, rating) in orderRatings)
             {
-                books.Single(x => x.Id == bookId).Rating = rating;
+                booksPreviews.Single(x => x.Id == bookId).Rating = rating;
             }
 
-            return books!;
+            return booksPreviews!;
         }
 
-        public IEnumerable<BookPreviewDto>? GetTopBooks()
+        public async Task<IEnumerable<BookPreviewDto>> GetTopBooksAsync()
         {
-            var orderRatings = new Dictionary<Guid, double>(_evaluationService.GetBooksRatings()
-                .OrderByDescending(x => x.Value).Take(10).ToList());
-            var books = _unitOfWork.GetRepository<Book>()
-                .FindBy(x => orderRatings.Select(valuePair => valuePair.Key).Contains(x.Id))
-                .ProjectTo<BookPreviewDto>(_mapper.ConfigurationProvider)
-                .Take(10).ToList();
-            if (books.Count == 0)
-            {   
-                _logger.Warning("No books were found with ratings for getting the top books.");
-                return null;
-            }
-
-            foreach (var (bookId, rating) in orderRatings)
+            var ratings = new Dictionary<Guid, double>(await _evaluationService.GetBooksRatingsAsync());
+            var orderedRatings = ratings.OrderByDescending(x => x.Value).Take(10);
+            var books = await _unitOfWork.GetRepository<Book>()
+                .FindAllAsync(x => orderedRatings.Select(valuePair => valuePair.Key).Contains(x.Id));
+            var topBooks = books.Take(10).ToList();
+            var topBooksPreviews = _mapper.Map<List<Book>, List<BookPreviewDto>>(topBooks);
+            if (topBooksPreviews.Count == 0)
             {
-                books.Single(x => x.Id == bookId).Rating = rating;
+                const string message = "No books were found with ratings for getting the top books.";
+                _logger.Warning(message);
+                throw new NotFoundException(message);
             }
 
-            return books;
+            foreach (var (bookId, rating) in orderedRatings)
+            {
+                topBooksPreviews.Single(x => x.Id == bookId).Rating = rating;
+            }
+
+            return topBooksPreviews;
         }
 
-        public IEnumerable<BookPreviewDto>? SearchByTitle(string query)
+        public async Task<IEnumerable<BookPreviewDto>> SearchByTitleAsync(string query)
         {
-            var books = _unitOfWork.GetRepository<Book>().FindBy(x => x.Name.Contains(query))
-                .ProjectTo<BookPreviewDto>(_mapper.ConfigurationProvider).ToList();
+            var books = await _unitOfWork.GetRepository<Book>().FindAllAsync(x => x.Name.Contains(query));
+            var booksList = books.ToList();
+            var booksPreviews = _mapper.Map<List<Book>, List<BookPreviewDto>>(booksList);
             if (books.Count != 0)
             {
-                var orderRatings = _evaluationService.GetBooksRatings();
+                var orderRatings = await _evaluationService.GetBooksRatingsAsync();
                 foreach (var (bookId, rating) in orderRatings)
                 {
-                    books.Single(x => x.Id == bookId).Rating = rating;
+                    booksPreviews.Single(x => x.Id == bookId).Rating = rating;
                 }
-                return books;
+                return booksPreviews;
             }
-            _logger.Warning($"Books containing {query} in their title were not found.");
-            return null;
+            var message = $"Books containing {query} in their title were not found.";
+            _logger.Warning(message);
+            throw new NotFoundException(message);
 
         }
 
-        public IEnumerable<BookPreviewDto>? SearchByFilter(BookSearchFilterDto filter)
+        public async Task<IEnumerable<BookPreviewDto>> SearchByFilterAsync(BookSearchFilterDto filter)
         {
             var bookRepository = _unitOfWork.GetRepository<Book>();
             IQueryable<Book> books = bookRepository.Query();
@@ -122,20 +129,22 @@ namespace LibraryIS.Application.Services
                 books = bookRepository.FindBy(book => book.Name.Contains(filter.Title));
             }
 
-            var resultBooks = books.ProjectTo<BookPreviewDto>(_mapper.ConfigurationProvider).ToList();
+            var resultBooks = books.ToList();
+            var booksPreviews = _mapper.Map<List<Book>, List<BookPreviewDto>>(resultBooks);
             
-            if (resultBooks.Count != 0)
+            if (booksPreviews.Count != 0)
             {
-                var orderRatings = _evaluationService.GetBooksRatings();
+                var orderRatings = await _evaluationService.GetBooksRatingsAsync();
                 foreach (var (bookId, rating) in orderRatings)
                 {
-                    resultBooks.Single(x => x.Id == bookId).Rating = rating;
+                    booksPreviews.Single(x => x.Id == bookId).Rating = rating;
                 }
-                return resultBooks;
+                return booksPreviews;
             }
-            _logger.Warning("No matches were found in the filter search.");
-            return null;
 
+            var message = "No matches were found in the filter search.";
+            _logger.Warning(message);
+            throw new NotFoundException(message);
         }
     }
 }

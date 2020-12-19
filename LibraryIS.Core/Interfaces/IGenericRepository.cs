@@ -18,8 +18,15 @@ namespace LibraryIS.Core.Interfaces
         Task<ICollection<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> match);
 
         IEnumerable<TEntity> Filter(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            string includeProperties = "",
+            int? page = null,
+            int? pageSize = null);
+
+        Task<IEnumerable<TEntity>> FilterAsync(
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             string includeProperties = "",
             int? page = null,
             int? pageSize = null);

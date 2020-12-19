@@ -18,11 +18,11 @@ namespace LibraryIS.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Dictionary<Guid, double> GetBooksRatings()
+        public async Task<Dictionary<Guid, double>> GetBooksRatingsAsync()
         {
-            var evaluations = _unitOfWork.GetRepository<Evaluation>().Filter(includeProperties: "Book")
-                .GroupBy(x => x.Book.Id);
-            var ratings = evaluations.ToDictionary(evaluation => evaluation.Key,
+            var evaluations = await _unitOfWork.GetRepository<Evaluation>().FilterAsync(includeProperties: "Book");
+            var groupedEvaluations = evaluations.GroupBy(x => x.Book.Id);
+            var ratings = groupedEvaluations.ToDictionary(evaluation => evaluation.Key,
                 evaluation => evaluation.Average(ev => ev.Rating));
 
             return ratings;

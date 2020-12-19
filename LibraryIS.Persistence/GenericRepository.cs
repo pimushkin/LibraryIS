@@ -12,10 +12,12 @@ namespace LibraryIS.Persistence
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity<Guid>
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
+            _unitOfWork = new UnitOfWork(context);
         }
 
         public IQueryable<TEntity> Query()
@@ -84,6 +86,37 @@ namespace LibraryIS.Persistence
             return query.ToList();
         }
 
+        public async Task<IEnumerable<TEntity>> FilterAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, string includeProperties = "", int? page = null,
+            int? pageSize = null)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (includeProperties != null)
+            {
+                foreach (
+                    var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            if (page != null && pageSize != null)
+            {
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
             return _context.Set<TEntity>().Where(predicate);
@@ -100,28 +133,29 @@ namespace LibraryIS.Persistence
             return _context.Set<TEntity>().ToList();
         }
 
-        public virtual async Task<ICollection<TEntity>> GetAllAsync()
+        public async Task<ICollection<TEntity>> GetAllAsync()
         {
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public virtual void Add(TEntity entity)
+        public void Add(TEntity entity)
         {
             _context.Set<TEntity>().Add(entity);
+            _context.SaveChanges();
         }
 
-        public virtual void Delete(Guid id)
+        public void Delete(Guid id)
         {
             var entityToDelete = _context.Set<TEntity>().Find(id);
             Delete(entityToDelete);
         }
 
-        public virtual void Delete(TEntity entityToDelete)
+        public void Delete(TEntity entityToDelete)
         {
             if (_context.Entry(entityToDelete).State == EntityState.Deleted)
             {
@@ -131,13 +165,13 @@ namespace LibraryIS.Persistence
             _context.Set<TEntity>().Remove(entityToDelete);
         }
 
-        public virtual void Update(TEntity entityToUpdate)
+        public void Update(TEntity entityToUpdate)
         {
             _context.Set<TEntity>().Attach(entityToUpdate);
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public virtual int Count()
+        public int Count()
         {
             return _context.Set<TEntity>().Count();
         }

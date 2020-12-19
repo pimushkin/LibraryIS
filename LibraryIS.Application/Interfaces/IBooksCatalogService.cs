@@ -7,9 +7,9 @@ namespace LibraryIS.Application.Interfaces
 {
     public interface IBooksCatalogService
     {
-        public IEnumerable<BookPreviewDto> GetRecentBooks(int page, int pageSize);
-        public IEnumerable<BookPreviewDto>? GetTopBooks();
-        public IEnumerable<BookPreviewDto>? SearchByTitle(string query);
-        public IEnumerable<BookPreviewDto>? SearchByFilter(BookSearchFilterDto filter);
+        public Task<IEnumerable<BookPreviewDto>> GetRecentBooksAsync(int page, int pageSize);
+        public Task<IEnumerable<BookPreviewDto>> GetTopBooksAsync();
+        public Task<IEnumerable<BookPreviewDto>> SearchByTitleAsync(string query);
+        public Task<IEnumerable<BookPreviewDto>> SearchByFilterAsync(BookSearchFilterDto filter);
     }
 }

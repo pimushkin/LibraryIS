@@ -18,5 +18,40 @@
             <param name="registerRequestDto">Credentials required for registration.</param>
             <returns></returns>
         </member>
+        <member name="M:LibraryIS.Api.Controllers.BookController.AddRatingToBook(LibraryIS.Application.DTOs.EvaluationDto)">
+            <summary>
+            Add a rating to the book that the reader took.
+            </summary>
+            <param name="evaluation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LibraryIS.Api.Controllers.BooksCatalogController.GetTopBooks">
+            <summary>
+            Get the top 10 books with the highest ratings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LibraryIS.Api.Controllers.BooksCatalogController.GetRecentBooks(System.Int32,System.Int32)">
+            <summary>
+            Get books for a specific page.
+            </summary>
+            <param name="page"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LibraryIS.Api.Controllers.BooksCatalogController.GetBooksByTitle(LibraryIS.Application.DTOs.BookTitleDto)">
+            <summary>
+            Find the book that contains the title you entered.
+            </summary>
+            <param name="bookTitle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LibraryIS.Api.Controllers.BooksCatalogController.GetBooksByFilter(LibraryIS.Application.DTOs.BookSearchFilterDto)">
+            <summary>
+            Find books by filter.
+            </summary>
+            <param name="bookSearchFilter"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

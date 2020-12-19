@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using LibraryIS.CrossCutting.Filters;
 using LibraryIS.Persistence;
@@ -24,9 +25,6 @@ namespace LibraryIS.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-                    options.Filters.Add<ApiExceptionFilterAttribute>())
-                .AddFluentValidation();
             services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(options =>
@@ -75,7 +73,9 @@ namespace LibraryIS.Api
                     }
                 });
             });
-            services.AddControllers();
+            services.AddControllers(options =>
+                    options.Filters.Add<ApiExceptionFilterAttribute>())
+                .AddFluentValidation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
