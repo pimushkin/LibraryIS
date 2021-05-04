@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using LibraryIS.Application.DTOs;
+﻿using LibraryIS.Application.DTOs;
 using LibraryIS.Application.Interfaces;
-using LibraryIS.Core.Entities;
-using LibraryIS.Core.Interfaces;
 using LibraryIS.CrossCutting.Exceptions;
+using LibraryIS.Domain.Entities;
+using LibraryIS.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Serilog;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using LibraryIS.Application.Repositories;
 
 namespace LibraryIS.Application.Services
 {
     public class BookService : IBookService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBookRepository _bookRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
 
-        public BookService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, ILogger logger)
+        public BookService(IBookRepository bookRepository, IHttpContextAccessor httpContextAccessor, ILogger logger)
         {
-            _unitOfWork = unitOfWork;
+            _bookRepository = bookRepository;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
         }
@@ -35,17 +34,16 @@ namespace LibraryIS.Application.Services
                 throw new ForbiddenAccessException();
             }
 
-            var userName = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var profiles = await _unitOfWork.GetRepository<ReaderProfile>()
-                .FilterAsync(x => x.User.Email == userName, includeProperties: "TakenBooks,Evaluations");
-            var profile = profiles.First();
-
-            var book = await _unitOfWork.GetRepository<Book>().GetByUniqueIdAsync(evaluation.BookId);
+            var book = await _bookRepository.GetByIdAsync(evaluation.BookId);
             if (book == null)
             {
-
                 throw new NotFoundException($"The book with id {evaluation.BookId} was not found.");
             }
+
+            var userName = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var profiles = await _unitOfWork.GetRepository<ReaderProfile>()
+                .FilterAsync(x => x.User.Email == userName);
+            var profile = profiles.First();
 
             if (profile.TakenBooks == null || profile.TakenBooks.Count == 0 || !profile.TakenBooks.Select(x => x.Book.Id).Contains(book.Id))
             {
@@ -57,13 +55,7 @@ namespace LibraryIS.Application.Services
                 throw new Exception("The reader has already rated the book.");
             }
 
-            profile.Evaluations ??= new List<Evaluation>();
-            profile.Evaluations.Add(new Evaluation
-            {
-                Book = book,
-                Profile = profile,
-                Rating = evaluation.Rating,
-            });
+            profile.AddEvaluationToBook(new Evaluation(evaluation.Rating, book, profile));
             _unitOfWork.GetRepository<ReaderProfile>().Update(profile);
             await _unitOfWork.Commit();
         }

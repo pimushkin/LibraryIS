@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibraryIS.Core.Enums
+﻿namespace LibraryIS.Domain.Enums
 {
     public enum RequestStatus
     {

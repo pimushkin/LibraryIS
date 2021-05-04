@@ -1,10 +1,9 @@
-﻿using System;
+﻿using LibraryIS.Domain.Common;
+using LibraryIS.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using LibraryIS.Core.Interfaces;
-using LibraryIS.SharedKernel;
 
 namespace LibraryIS.Persistence
 {
@@ -12,13 +11,14 @@ namespace LibraryIS.Persistence
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+        private bool _disposed;
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
-        public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity<Guid>
+        public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : Entity
         {
             if (_repositories.Keys.Contains(typeof(TEntity)))
             {
@@ -34,10 +34,12 @@ namespace LibraryIS.Persistence
 
         public async Task<int> Commit()
         {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
             return await _applicationDbContext.SaveChangesAsync();
         }
-
-        private bool _disposed;
 
         protected virtual void Dispose(bool disposing)
         {

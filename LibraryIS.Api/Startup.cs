@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using LibraryIS.CrossCutting.Filters;
 using LibraryIS.Persistence;
@@ -11,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
 
 namespace LibraryIS.Api
 {
@@ -26,7 +25,9 @@ namespace LibraryIS.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(option =>
-                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",

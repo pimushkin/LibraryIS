@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using LibraryIS.Application.DTOs;
+﻿using LibraryIS.Application.DTOs;
+using System.Threading.Tasks;
 
 namespace LibraryIS.Application.Interfaces
 {

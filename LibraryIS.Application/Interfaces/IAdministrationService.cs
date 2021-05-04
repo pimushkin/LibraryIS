@@ -1,11 +1,8 @@
-﻿using System;
+﻿using LibraryIS.Application.DTOs;
+using LibraryIS.Domain.Entities;
+using LibraryIS.Domain.Enums;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibraryIS.Application.DTOs;
-using LibraryIS.Core.Entities;
-using LibraryIS.Core.Enums;
 
 namespace LibraryIS.Application.Interfaces
 {

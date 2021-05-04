@@ -1,23 +1,21 @@
-﻿using System;
+﻿using LibraryIS.Domain.Common;
+using LibraryIS.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LibraryIS.Core.Interfaces;
-using LibraryIS.SharedKernel;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIS.Persistence
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity<Guid>
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : Entity
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
-            _unitOfWork = new UnitOfWork(context);
         }
 
         public IQueryable<TEntity> Query()
@@ -146,7 +144,6 @@ namespace LibraryIS.Persistence
         public void Add(TEntity entity)
         {
             _context.Set<TEntity>().Add(entity);
-            _context.SaveChanges();
         }
 
         public void Delete(Guid id)

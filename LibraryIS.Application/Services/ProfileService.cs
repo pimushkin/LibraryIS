@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibraryIS.Application.Interfaces;
-using LibraryIS.Core.Entities;
+﻿using LibraryIS.Application.Interfaces;
+using LibraryIS.Domain.Entities;
+using System;
 
 namespace LibraryIS.Application.Services
 {

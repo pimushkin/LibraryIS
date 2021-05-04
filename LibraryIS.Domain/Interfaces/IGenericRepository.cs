@@ -1,13 +1,13 @@
-﻿using System;
+﻿using LibraryIS.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LibraryIS.SharedKernel;
 
-namespace LibraryIS.Core.Interfaces
+namespace LibraryIS.Domain.Interfaces
 {
-    public interface IGenericRepository<TEntity> where TEntity : BaseEntity<Guid>
+    public interface IGenericRepository<TEntity> where TEntity : Entity
     {
         IQueryable<TEntity> Query();
         TEntity GetByUniqueId(object id);

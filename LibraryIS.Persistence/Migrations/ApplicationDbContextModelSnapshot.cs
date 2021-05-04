@@ -15,9 +15,9 @@ namespace LibraryIS.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("AuthorBook", b =>
                 {
@@ -79,14 +79,13 @@ namespace LibraryIS.Persistence.Migrations
                     b.ToTable("GenreReaderProfile");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.Author", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Author", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -94,21 +93,19 @@ namespace LibraryIS.Persistence.Migrations
                     b.ToTable("Author");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.Book", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Book", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("LanguageId")
+                    b.Property<Guid?>("BookLanguageId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PageCount")
@@ -117,14 +114,17 @@ namespace LibraryIS.Persistence.Migrations
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("LanguageId");
+                    b.HasIndex("BookLanguageId");
 
                     b.ToTable("Book");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.CopyBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ElectronicCopyRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,6 +132,36 @@ namespace LibraryIS.Persistence.Migrations
 
                     b.Property<Guid?>("BookId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PagesRange")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("RequestingReaderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("RequestingReaderId");
+
+                    b.ToTable("ElectronicCopyRequest");
+                });
+
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Evaluation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<Guid?>("ReaderProfileId")
                         .HasColumnType("uniqueidentifier");
@@ -142,69 +172,16 @@ namespace LibraryIS.Persistence.Migrations
 
                     b.HasIndex("ReaderProfileId");
 
-                    b.ToTable("CopyBook");
-                });
-
-            modelBuilder.Entity("LibraryIS.Core.Entities.ElectronicCopyRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PagesRange")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ReaderProfileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("RequestStatus")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ReaderProfileId");
-
-                    b.ToTable("ElectronicCopyRequest");
-                });
-
-            modelBuilder.Entity("LibraryIS.Core.Entities.Evaluation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ProfileId");
-
                     b.ToTable("Evaluation");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.Genre", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Genre", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -212,14 +189,13 @@ namespace LibraryIS.Persistence.Migrations
                     b.ToTable("Genre");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.Language", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Language", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -227,22 +203,18 @@ namespace LibraryIS.Persistence.Migrations
                     b.ToTable("Language");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.PublishingHouse", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.PublishingHouse", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("PublishingHouse");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.ReaderProfile", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ReaderProfile", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -251,11 +223,9 @@ namespace LibraryIS.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LibraryCard")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PassportSeriesAndNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -263,19 +233,19 @@ namespace LibraryIS.Persistence.Migrations
                     b.ToTable("ReaderProfile");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.ReservedBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ReservedBook", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookId")
+                    b.Property<Guid?>("BookedBookId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ReaderProfileId")
+                    b.Property<Guid?>("ReaderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
@@ -283,14 +253,14 @@ namespace LibraryIS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookedBookId");
 
-                    b.HasIndex("ReaderProfileId");
+                    b.HasIndex("ReaderId");
 
                     b.ToTable("ReservedBook");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.TakenBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.TakenBook", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -299,7 +269,7 @@ namespace LibraryIS.Persistence.Migrations
                     b.Property<Guid?>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ReaderProfileId")
+                    b.Property<Guid?>("ReaderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ReceiveDate")
@@ -312,12 +282,12 @@ namespace LibraryIS.Persistence.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("ReaderProfileId");
+                    b.HasIndex("ReaderId");
 
                     b.ToTable("TakenBook");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.User", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -327,11 +297,9 @@ namespace LibraryIS.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAdmin")
@@ -341,11 +309,9 @@ namespace LibraryIS.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -355,13 +321,13 @@ namespace LibraryIS.Persistence.Migrations
 
             modelBuilder.Entity("AuthorBook", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Author", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Author", null)
                         .WithMany()
                         .HasForeignKey("AuthorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIS.Core.Entities.Book", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Book", null)
                         .WithMany()
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -370,13 +336,13 @@ namespace LibraryIS.Persistence.Migrations
 
             modelBuilder.Entity("BookGenre", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Book", null)
                         .WithMany()
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIS.Core.Entities.Genre", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -385,13 +351,13 @@ namespace LibraryIS.Persistence.Migrations
 
             modelBuilder.Entity("BookPublishingHouse", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Book", null)
                         .WithMany()
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIS.Core.Entities.PublishingHouse", null)
+                    b.HasOne("LibraryIS.Domain.Entities.PublishingHouse", null)
                         .WithMany()
                         .HasForeignKey("PublishingHousesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -400,36 +366,51 @@ namespace LibraryIS.Persistence.Migrations
 
             modelBuilder.Entity("GenreReaderProfile", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", null)
+                    b.HasOne("LibraryIS.Domain.Entities.ReaderProfile", null)
                         .WithMany()
                         .HasForeignKey("ReaderProfilesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIS.Core.Entities.Genre", null)
+                    b.HasOne("LibraryIS.Domain.Entities.Genre", null)
                         .WithMany()
                         .HasForeignKey("TopGenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.Book", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Book", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Language", "Language")
+                    b.HasOne("LibraryIS.Domain.Entities.Language", "BookLanguage")
                         .WithMany()
-                        .HasForeignKey("LanguageId");
+                        .HasForeignKey("BookLanguageId");
 
-                    b.Navigation("Language");
+                    b.Navigation("BookLanguage");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.CopyBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ElectronicCopyRequest", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", "Book")
+                    b.HasOne("LibraryIS.Domain.Entities.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Domain.Entities.ReaderProfile", "RequestingReader")
+                        .WithMany("ElectronicCopyRequests")
+                        .HasForeignKey("RequestingReaderId");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("RequestingReader");
+                });
+
+            modelBuilder.Entity("LibraryIS.Domain.Entities.Evaluation", b =>
+                {
+                    b.HasOne("LibraryIS.Domain.Entities.Book", "Book")
                         .WithMany()
+                        .HasForeignKey("BookId");
+
+                    b.HasOne("LibraryIS.Domain.Entities.ReaderProfile", "ReaderProfile")
+                        .WithMany("Evaluations")
                         .HasForeignKey("ReaderProfileId");
 
                     b.Navigation("Book");
@@ -437,86 +418,48 @@ namespace LibraryIS.Persistence.Migrations
                     b.Navigation("ReaderProfile");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.ElectronicCopyRequest", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ReaderProfile", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
-                        .WithMany("ElectronicCopyRequests")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("ReaderProfile");
-                });
-
-            modelBuilder.Entity("LibraryIS.Core.Entities.Evaluation", b =>
-                {
-                    b.HasOne("LibraryIS.Core.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "Profile")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Profile");
-                });
-
-            modelBuilder.Entity("LibraryIS.Core.Entities.ReaderProfile", b =>
-                {
-                    b.HasOne("LibraryIS.Core.Entities.User", "User")
+                    b.HasOne("LibraryIS.Domain.Entities.User", "User")
                         .WithOne("ReaderProfile")
-                        .HasForeignKey("LibraryIS.Core.Entities.ReaderProfile", "Id")
+                        .HasForeignKey("LibraryIS.Domain.Entities.ReaderProfile", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.ReservedBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ReservedBook", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", "Book")
+                    b.HasOne("LibraryIS.Domain.Entities.Book", "BookedBook")
                         .WithMany()
-                        .HasForeignKey("BookId");
+                        .HasForeignKey("BookedBookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Domain.Entities.ReaderProfile", "Reader")
                         .WithMany("ReservedBooks")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReaderId");
 
-                    b.Navigation("Book");
+                    b.Navigation("BookedBook");
 
-                    b.Navigation("ReaderProfile");
+                    b.Navigation("Reader");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.TakenBook", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.TakenBook", b =>
                 {
-                    b.HasOne("LibraryIS.Core.Entities.Book", "Book")
+                    b.HasOne("LibraryIS.Domain.Entities.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("LibraryIS.Core.Entities.ReaderProfile", "ReaderProfile")
+                    b.HasOne("LibraryIS.Domain.Entities.ReaderProfile", "Reader")
                         .WithMany("TakenBooks")
-                        .HasForeignKey("ReaderProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReaderId");
 
                     b.Navigation("Book");
 
-                    b.Navigation("ReaderProfile");
+                    b.Navigation("Reader");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.ReaderProfile", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.ReaderProfile", b =>
                 {
                     b.Navigation("ElectronicCopyRequests");
 
@@ -527,7 +470,7 @@ namespace LibraryIS.Persistence.Migrations
                     b.Navigation("TakenBooks");
                 });
 
-            modelBuilder.Entity("LibraryIS.Core.Entities.User", b =>
+            modelBuilder.Entity("LibraryIS.Domain.Entities.User", b =>
                 {
                     b.Navigation("ReaderProfile");
                 });

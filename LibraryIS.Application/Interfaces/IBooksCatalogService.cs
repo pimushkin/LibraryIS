@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibraryIS.Application.DTOs;
-using LibraryIS.Core.Entities;
+using LibraryIS.Domain.Entities;
 
 namespace LibraryIS.Application.Interfaces
 {

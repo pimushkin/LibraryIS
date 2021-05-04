@@ -2,26 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Behaviors\UnhandledExceptionBehaviour.cs~RF117809c.TMP" />
+    <None Remove="Services\BooksCatalogService.cs~RF12134b95.TMP" />
     <None Remove="Services\BooksCatalogService.cs~RFa1b27e3.TMP" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibraryIS.Core\LibraryIS.Core.csproj" />
     <ProjectReference Include="..\LibraryIS.CrossCutting\LibraryIS.CrossCutting.csproj" />
-    <ProjectReference Include="..\LibraryIS.SharedKernel\LibraryIS.SharedKernel.csproj" />
+    <ProjectReference Include="..\LibraryIS.Domain\LibraryIS.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="FluentValidation" Version="9.3.0" />
+    <PackageReference Include="FluentValidation" Version="9.5.2" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
